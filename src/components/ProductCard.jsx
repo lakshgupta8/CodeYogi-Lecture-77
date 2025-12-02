@@ -10,7 +10,7 @@ function ProductCard({
   discountPercentage,
   thumbnail,
   rating,
-  contextProductList,
+  contextIdList,
 }) {
   const location = useLocation();
   const originalPrice = (price * 100) / (100 - discountPercentage);
@@ -18,7 +18,10 @@ function ProductCard({
   return (
     <Link
       to={"/product/" + id}
-      state={{ from: location, productList: contextProductList }}
+      state={{
+        from: location,
+        idList: contextIdList,
+      }}
     >
       <div className="flex flex-col bg-white">
         <div className="bg-gray-100 mb-3">

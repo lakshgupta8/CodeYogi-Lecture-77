@@ -34,6 +34,22 @@ export function searchProducts(query, sortBy, order, page) {
   return axios.get(url).then((response) => response.data);
 }
 
+export function getProductIds(sortBy, order) {
+  let url = "https://dummyjson.com/products?limit=0&select=id";
+  if (sortBy && order) {
+    url += `&sortBy=${sortBy}&order=${order}`;
+  }
+  return axios.get(url).then((response) => response.data);
+}
+
+export function searchProductIds(query, sortBy, order) {
+  let url = `https://dummyjson.com/products/search?q=${query}&limit=0&select=id`;
+  if (sortBy && order) {
+    url += `&sortBy=${sortBy}&order=${order}`;
+  }
+  return axios.get(url).then((response) => response.data);
+}
+
 export function signupUser(firstName, email, password) {
   const url = "https://r5ftltl6sj.execute-api.us-east-1.amazonaws.com/signup";
   const data = {

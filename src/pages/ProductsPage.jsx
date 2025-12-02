@@ -4,7 +4,12 @@ import Filter from "../components/Filter.jsx";
 import ProductGrid from "../components/ProductGrid.jsx";
 import NoMatch from "../components/NoMatch.jsx";
 import Loading from "../components/Loading.jsx";
-import { getProductList, searchProducts } from "../api.js";
+import {
+  getProductList,
+  searchProducts,
+  getProductIds,
+  searchProductIds,
+} from "../api.js";
 
 function ProductsPage() {
   const [productData, setProductData] = useState({});
@@ -47,6 +52,39 @@ function ProductsPage() {
         });
     },
     [query, sort, page]
+  );
+
+  const [idList, setIdList] = useState([]);
+
+  useEffect(
+    function () {
+      let sortBy;
+      let order;
+
+      if (sort === "title") {
+        sortBy = "title";
+        order = "asc";
+      } else if (sort === "price-asc") {
+        sortBy = "price";
+        order = "asc";
+      } else if (sort === "price-desc") {
+        sortBy = "price";
+        order = "desc";
+      }
+
+      const promise = query
+        ? searchProductIds(query, sortBy, order)
+        : getProductIds(sortBy, order);
+
+      promise
+        .then(function (data) {
+          setIdList(data.products);
+        })
+        .catch(function (error) {
+          console.error("Error fetching product IDs:", error);
+        });
+    },
+    [query, sort]
   );
 
   const lastPage = Math.ceil(productData.total / 12);
@@ -132,7 +170,7 @@ function ProductsPage() {
       {loading && <Loading />}
       {!loading && productData.products.length > 0 && (
         <>
-          <ProductGrid products={productData.products} />
+          <ProductGrid products={productData.products} idList={idList} />
           <div className="flex gap-1 mt-8">
             {page > 1 && (
               <Link

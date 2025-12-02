@@ -15,10 +15,12 @@ const ProductDetailPage = () => {
   const location = useLocation();
   const { addToCart } = useCart();
 
-  const productList = location.state?.productList || [];
-  const currentProductIndex = productList.findIndex((p) => p.id === id);
-  const nextProduct = productList[currentProductIndex + 1];
-  const prevProduct = productList[currentProductIndex - 1];
+  const idList = location.state?.idList || [];
+
+  const currentProductIndex = idList.findIndex((p) => p.id === id);
+  const nextProduct = idList[currentProductIndex + 1];
+  const prevProduct = idList[currentProductIndex - 1];
+
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
