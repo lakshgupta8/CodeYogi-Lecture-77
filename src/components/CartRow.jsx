@@ -39,7 +39,7 @@ function CartRow(props) {
   );
 
   const ids = cartItemsData.map(function (item) {
-    return item.id;
+    return { id: item.id };
   });
 
   const location = useLocation();
