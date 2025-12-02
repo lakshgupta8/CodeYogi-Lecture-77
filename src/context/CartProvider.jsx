@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { getProduct } from "../api";
+import { getCartProducts } from "../api";
 import { CartContext } from "./CartContext.js";
 
 export default function CartProvider({ children }) {
@@ -31,19 +31,9 @@ export default function CartProvider({ children }) {
     }
 
     setLoading(true);
-    Promise.allSettled(
-      itemIds.map((id) =>
-        getProduct(id).then((product) => ({
-          ...product,
-          quantity: cartItems[id],
-        }))
-      )
-    )
-      .then((results) => {
-        const fulfilled = results
-          .filter((r) => r.status === "fulfilled")
-          .map((r) => r.value);
-        setCartItemsData(fulfilled);
+    getCartProducts(itemIds)
+      .then((products) => {
+        setCartItemsData(products);
       })
       .catch(() => {
         setCartItemsData([]);
@@ -51,14 +41,14 @@ export default function CartProvider({ children }) {
       .finally(() => {
         setLoading(false);
       });
-  }, [itemIds, cartItems]);
+  }, [itemIds]);
 
   const displayCartItemsData = useMemo(() => {
     return cartItemsData.map((item) => ({
       ...item,
-      quantity: pendingQuantities[item.id] ?? item.quantity,
+      quantity: pendingQuantities[item.id] ?? cartItems[item.id],
     }));
-  }, [cartItemsData, pendingQuantities]);
+  }, [cartItemsData, pendingQuantities, cartItems]);
 
   const subtotal = useMemo(() => {
     return cartItemsData.reduce(

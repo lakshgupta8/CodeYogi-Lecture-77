@@ -17,6 +17,12 @@ export function getProduct(id) {
     .then((response) => response.data);
 }
 
+export function getCartProducts(ids) {
+  const commaSeparatedIds = ids.join(",");
+  const url = `https://r5ftltl6sj.execute-api.us-east-1.amazonaws.com/products/bulk?ids=[${commaSeparatedIds}]`;
+  return axios.get(url).then((response) => response.data.products);
+}
+
 export function searchProducts(query, sortBy, order, page) {
   let url = `https://dummyjson.com/products/search?q=${query}&limit=12`;
   if (sortBy && order) {

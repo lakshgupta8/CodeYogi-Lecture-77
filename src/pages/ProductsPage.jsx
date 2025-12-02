@@ -78,7 +78,7 @@ function ProductsPage() {
     if (pageNo === "...") {
       return (
         <div
-          key={index}
+          key={"ellipsis-" + index}
           className="flex justify-center items-center bg-white border border-primary-dark w-8 h-8 text-primary-dark"
         >
           ...
