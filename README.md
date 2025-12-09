@@ -2,12 +2,18 @@
 
 An e-commerce web application built with React, Vite, and Tailwind CSS featuring user authentication, product browsing, shopping cart functionality, and 10-minute same-day delivery.
 
+### 🌐 Live Preview
+
+Check out the live demo here: [AwesomeBuy](https://codeyogi-lecture-77.netlify.app/)
+
 ### Implementation Notes
-- **Authentication Scope**: Unlike the video tutorial, which secured all pages, this project implements protected routes specifically for dashboard and other authentication-dependent sections.
+
+- **Modern Approach**: Higher-Order Components (HOCs) are avoided in favor of Custom Hooks, which are considered a more modern and overall better way of React programming.
 
 ## 🌟 Features
 
 ### Core Functionality
+
 - **Product Catalog**: Browse products with search, filtering, and pagination
 - **Product Details**: View detailed information about each product with star ratings
 - **Shopping Cart**: Add, remove, and manage items in your cart
@@ -16,6 +22,7 @@ An e-commerce web application built with React, Vite, and Tailwind CSS featuring
 - **Responsive Design**: Mobile-friendly UI with Tailwind CSS
 
 ### User Experience
+
 - **Real-time Cart Updates**: Instant cart total calculations
 - **Loading States**: Visual feedback during data fetching
 - **Error Handling**: User-friendly error messages and alerts
@@ -24,19 +31,20 @@ An e-commerce web application built with React, Vite, and Tailwind CSS featuring
 
 ## 🛠️ Tech Stack
 
-- **Framework**: React 19.1
-- **Build Tool**: Vite 7.1
-- **Styling**: Tailwind CSS 4.1
-- **Routing**: React Router DOM 6.30
-- **HTTP Client**: Axios 1.12
-- **Form Management**: Formik 2.4 + Yup 1.7
-- **Icons**: Lucide React 0.546 + React Icons 5.5
-- **Package Manager**: pnpm
+- **Frontend Framework**: [React](https://reactjs.org/) (v18+)
+- **Build Tool**: [Vite](https://vitejs.dev/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Routing**: [React Router DOM](https://reactrouter.com/)
+- **State Management**: React Context API (`UserContext`, `CartContext`, `AlertContext`)
+- **HTTP Client**: [Axios](https://axios-http.com/)
+- **Form Handling**: [Formik](https://formik.org/) & [Yup](https://github.com/jquense/yup)
+- **Icons**: [React Icons](https://react-icons.github.io/react-icons/)
+- **Package Manager**: [pnpm](https://pnpm.io/)
 
 ## 📁 Project Structure
 
 ```
-Video 74/
+CodeYogi-Lecture-77/
 ├── src/
 │   ├── components/          # Reusable UI components
 │   │   ├── Navbar.jsx
@@ -77,25 +85,29 @@ Video 74/
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js (v16 or higher)
 - pnpm (or npm/yarn)
 
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
-   git clone <repository-url>
-   cd "CodeYogi-Assignment-74"
+   git clone https://github.com/lakshgupta8/CodeYogi-Lecture-77
+   cd "CodeYogi-Lecture-77"
    ```
 
 2. **Install dependencies**
+
    ```bash
-   pnpm install
+   npm/pnpm/bun install
    ```
 
 3. **Start the development server**
+
    ```bash
-   pnpm run dev
+   npm/pnpm/bun run dev
    ```
 
 4. **Open your browser**
@@ -103,10 +115,10 @@ Video 74/
 
 ### Available Scripts
 
-- `pnpm dev` - Start development server with hot reload
-- `pnpm build` - Build for production
-- `pnpm preview` - Preview production build
-- `pnpm lint` - Run ESLint
+- `dev` - Start development server with hot reload
+- `build` - Build for production
+- `preview` - Preview production build
+- `lint` - Run ESLint
 
 ## 🔐 Authentication Flow
 
@@ -139,6 +151,7 @@ The cart system uses React Context API for state management:
 ## 🌐 API Integration
 
 The application connects to a backend API for:
+
 - Product data fetching
 - User authentication
 - Cart operations
@@ -149,6 +162,7 @@ API base URL: `https://r5ftltl6sj.execute-api.us-east-1.amazonaws.com`
 ## 🎨 UI Components
 
 ### Reusable Components
+
 - **ProductCard**: Display product information in grid
 - **Filter**: Search and filter products
 - **Pagination**: Navigate through product pages
@@ -160,17 +174,21 @@ API base URL: `https://r5ftltl6sj.execute-api.us-east-1.amazonaws.com`
 ## 🔧 Configuration
 
 ### Vite Configuration
+
 Located in `vite.config.js` - configured for React with optimal build settings.
 
 ### Tailwind CSS
+
 Using Tailwind CSS v4 with Vite plugin for styling.
 
 ### ESLint
+
 Code quality maintained with ESLint and recommended React rules.
 
 ## 📦 Dependencies
 
 ### Production
+
 - React & React DOM for UI
 - React Router for navigation
 - Axios for API calls
@@ -178,6 +196,7 @@ Code quality maintained with ESLint and recommended React rules.
 - Tailwind CSS for styling
 
 ### Development
+
 - Vite for fast development
 - ESLint for code quality
 - Prettier for code formatting
@@ -192,12 +211,17 @@ Code quality maintained with ESLint and recommended React rules.
 
 ## 📄 License
 
-This project is part of the CodeYogi assignment series.
+This project is part of the CodeYogi Lecture series.
 
 ## 👨‍💻 Developer
 
-Created as part of CodeYogi Video 74 assignment.
+Created as part of CodeYogi Non-Assignment Lectures - 77.
 
 ---
 
 **Note**: This is a learning project built as part of a coding course. The backend API is hosted on AWS Lambda and may have usage limitations.
+
+##Awaiting APIs
+
+1. Get Cart
+2. Save Cart

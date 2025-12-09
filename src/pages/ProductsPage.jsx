@@ -21,22 +21,20 @@ function ProductsPage() {
   const query = params.query || "";
   const sort = params.sort || "default";
 
+  let sortBy, order;
+  if (sort === "title") {
+    sortBy = "title";
+    order = "asc";
+  } else if (sort === "price-asc") {
+    sortBy = "price";
+    order = "asc";
+  } else if (sort === "price-desc") {
+    sortBy = "price";
+    order = "desc";
+  }
+
   useEffect(
     function () {
-      let sortBy;
-      let order;
-
-      if (sort === "title") {
-        sortBy = "title";
-        order = "asc";
-      } else if (sort === "price-asc") {
-        sortBy = "price";
-        order = "asc";
-      } else if (sort === "price-desc") {
-        sortBy = "price";
-        order = "desc";
-      }
-
       setLoading(true);
       const promise = query
         ? searchProducts(query, sortBy, order, page)
@@ -51,27 +49,13 @@ function ProductsPage() {
           setLoading(false);
         });
     },
-    [query, sort, page]
+    [query, sortBy, order, page]
   );
 
   const [idList, setIdList] = useState([]);
 
   useEffect(
     function () {
-      let sortBy;
-      let order;
-
-      if (sort === "title") {
-        sortBy = "title";
-        order = "asc";
-      } else if (sort === "price-asc") {
-        sortBy = "price";
-        order = "asc";
-      } else if (sort === "price-desc") {
-        sortBy = "price";
-        order = "desc";
-      }
-
       const promise = query
         ? searchProductIds(query, sortBy, order)
         : getProductIds(sortBy, order);
@@ -84,7 +68,7 @@ function ProductsPage() {
           console.error("Error fetching product IDs:", error);
         });
     },
-    [query, sort]
+    [query, sortBy, order]
   );
 
   const lastPage = Math.ceil(productData.total / 12);
@@ -126,7 +110,10 @@ function ProductsPage() {
 
     return (
       <Link
-        to={"?" + new URLSearchParams({ ...params, page: pageNo })}
+        to={
+          "?" +
+          new URLSearchParams(filterEmptyParams({ ...params, page: pageNo }))
+        }
         className={
           "border border-primary-dark w-8 h-8 flex items-center justify-center " +
           (pageNo === page
@@ -141,19 +128,32 @@ function ProductsPage() {
   });
 
   const handleSearch = (newQuery) => {
-    setSearchParams(
-      { ...params, query: newQuery, page: 1 },
-      { replace: false }
-    );
+    const newParams = { ...params, query: newQuery, page: 1 };
+    setSearchParams(filterEmptyParams(newParams), { replace: false });
   };
 
   const handleSort = (newSort) => {
-    setSearchParams({ ...params, sort: newSort }, { replace: false });
+    const newParams = { ...params, sort: newSort };
+    setSearchParams(filterEmptyParams(newParams), { replace: false });
   };
 
   const handleClearSearch = () => {
-    setSearchParams({ ...params, query: "", page: 1 }, { replace: false });
+    const newParams = { ...params, query: "", page: 1 };
+    setSearchParams(filterEmptyParams(newParams), { replace: false });
   };
+
+  function filterEmptyParams(obj) {
+    const newObj = {};
+    Object.keys(obj).forEach((key) => {
+      if (obj[key]) {
+        newObj[key] = obj[key];
+      }
+    });
+    if (newObj.page == 1) {
+      delete newObj.page;
+    }
+    return newObj;
+  }
 
   return (
     <div className="bg-white mx-auto my-8 md:my-16 px-9 py-8 max-w-xl sm:max-w-2xl md:max-w-4xl lg:max-w-6xl">
@@ -174,7 +174,12 @@ function ProductsPage() {
           <div className="flex gap-1 mt-8">
             {page > 1 && (
               <Link
-                to={"?" + new URLSearchParams({ ...params, page: page - 1 })}
+                to={
+                  "?" +
+                  new URLSearchParams(
+                    filterEmptyParams({ ...params, page: page - 1 })
+                  )
+                }
                 className={
                   "border border-primary-dark w-8 h-8 text-center bg-white text-primary-dark hover:bg-primary-dark hover:text-white"
                 }
@@ -185,7 +190,12 @@ function ProductsPage() {
             {pages}
             {page < lastPage && (
               <Link
-                to={"?" + new URLSearchParams({ ...params, page: page + 1 })}
+                to={
+                  "?" +
+                  new URLSearchParams(
+                    filterEmptyParams({ ...params, page: page + 1 })
+                  )
+                }
                 className={
                   "border border-primary-dark w-8 h-8 text-center bg-white text-primary-dark hover:bg-primary-dark hover:text-white"
                 }
