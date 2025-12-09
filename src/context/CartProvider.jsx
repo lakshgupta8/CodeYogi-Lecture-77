@@ -1,35 +1,29 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { getProduct, saveCart, getCart } from "../api";
 import { CartContext } from "./CartContext";
-import { useUser } from "./UserContext";
 
 export default function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState({});
   const [pendingQuantities, setPendingQuantities] = useState({});
   const [cartItemsData, setCartItemsData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { user } = useUser();
   const token = localStorage.getItem("token");
 
   useEffect(() => {
     setLoading(true);
-    if (user) {
+    if (token) {
       getCart(token)
         .then((data) => {
           setCartItems(data.cart || {});
         })
         .catch(() => {
           setCartItems({});
-        })
-        .finally(() => {
-          setLoading(false);
         });
     } else {
       const saved = localStorage.getItem("cartItems");
       setCartItems(saved ? JSON.parse(saved) : {});
-      setLoading(false);
     }
-  }, [user, token]);
+  }, [token]);
 
   const itemIds = useMemo(
     () => Object.keys(cartItems).filter((key) => cartItems[key] > 0),
@@ -42,10 +36,8 @@ export default function CartProvider({ children }) {
   );
 
   useEffect(() => {
-    setLoading(true);
     if (itemIds.length === 0) {
       setCartItemsData([]);
-      setLoading(false);
       return;
     }
 
@@ -90,7 +82,7 @@ export default function CartProvider({ children }) {
       setCartItems((prev) => {
         const current = prev[productId] || 0;
         const updated = { ...prev, [productId]: current + count };
-        if (user) {
+        if (token) {
           saveCart(updated, token);
           localStorage.removeItem("cartItems");
         } else {
@@ -99,14 +91,14 @@ export default function CartProvider({ children }) {
         return updated;
       });
     },
-    [user, token]
+    [token]
   );
 
   const removeFromCart = useCallback(
     (productId) => {
       setCartItems((prev) => {
         const updated = { ...prev, [productId]: 0 };
-        if (user) {
+        if (token) {
           saveCart(updated, token);
           localStorage.removeItem("cartItems");
         } else {
@@ -120,7 +112,7 @@ export default function CartProvider({ children }) {
         return newPending;
       });
     },
-    [user, token]
+    [token]
   );
 
   const updateQuantity = useCallback((productId, newQty) => {
@@ -131,6 +123,7 @@ export default function CartProvider({ children }) {
   }, []);
 
   const updateCart = useCallback(() => {
+    setLoading(true);
     setCartItems((prevCart) => {
       let hasChanges = false;
       const updatedCart = { ...prevCart };
@@ -148,7 +141,7 @@ export default function CartProvider({ children }) {
       }
 
       if (hasChanges) {
-        if (user) {
+        if (token) {
           saveCart(updatedCart, token);
           localStorage.removeItem("cartItems");
         } else {
@@ -160,7 +153,7 @@ export default function CartProvider({ children }) {
     });
 
     setPendingQuantities({});
-  }, [pendingQuantities, user, token]);
+  }, [pendingQuantities, token]);
 
   const getItemSubtotal = useCallback((price, quantity) => {
     return price * Number(quantity);
