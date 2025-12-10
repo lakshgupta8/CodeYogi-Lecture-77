@@ -48,8 +48,8 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   const value = useMemo(
-    () => ({ user, loading, login, logout }),
-    [user, loading, login, logout]
+    () => ({ user, isLoggedIn: !!token, loading, login, logout }),
+    [user, token, loading, login, logout]
   );
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

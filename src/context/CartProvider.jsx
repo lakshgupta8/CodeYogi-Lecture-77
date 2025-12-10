@@ -1,17 +1,19 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { getProduct, saveCart, getCart } from "../api";
 import { CartContext } from "./CartContext";
+import { useUser } from "./UserContext";
 
 export default function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState({});
   const [pendingQuantities, setPendingQuantities] = useState({});
   const [cartItemsData, setCartItemsData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const token = localStorage.getItem("token");
+  const { isLoggedIn } = useUser();
+  const token = isLoggedIn ? localStorage.getItem("token") : null;
 
   useEffect(() => {
     setLoading(true);
-    if (token) {
+    if (isLoggedIn) {
       getCart(token)
         .then((data) => {
           setCartItems(data.cart || {});
@@ -23,7 +25,7 @@ export default function CartProvider({ children }) {
       const saved = localStorage.getItem("cartItems");
       setCartItems(saved ? JSON.parse(saved) : {});
     }
-  }, [token]);
+  }, [isLoggedIn, token]);
 
   const itemIds = useMemo(
     () => Object.keys(cartItems).filter((key) => cartItems[key] > 0),
@@ -38,6 +40,7 @@ export default function CartProvider({ children }) {
   useEffect(() => {
     if (itemIds.length === 0) {
       setCartItemsData([]);
+      setLoading(false);
       return;
     }
 
@@ -82,7 +85,7 @@ export default function CartProvider({ children }) {
       setCartItems((prev) => {
         const current = prev[productId] || 0;
         const updated = { ...prev, [productId]: current + count };
-        if (token) {
+        if (isLoggedIn) {
           saveCart(updated, token);
           localStorage.removeItem("cartItems");
         } else {
@@ -91,14 +94,14 @@ export default function CartProvider({ children }) {
         return updated;
       });
     },
-    [token]
+    [isLoggedIn, token]
   );
 
   const removeFromCart = useCallback(
     (productId) => {
       setCartItems((prev) => {
         const updated = { ...prev, [productId]: 0 };
-        if (token) {
+        if (isLoggedIn) {
           saveCart(updated, token);
           localStorage.removeItem("cartItems");
         } else {
@@ -112,7 +115,7 @@ export default function CartProvider({ children }) {
         return newPending;
       });
     },
-    [token]
+    [isLoggedIn, token]
   );
 
   const updateQuantity = useCallback((productId, newQty) => {
@@ -123,6 +126,16 @@ export default function CartProvider({ children }) {
   }, []);
 
   const updateCart = useCallback(() => {
+    const hasChanges = Object.entries(pendingQuantities).some(([id, qty]) => {
+      const currentQty = cartItems[id] || 0;
+      return currentQty !== qty;
+    });
+
+    if (!hasChanges) {
+      setPendingQuantities({});
+      return;
+    }
+
     setLoading(true);
     setCartItems((prevCart) => {
       let hasChanges = false;
@@ -141,7 +154,7 @@ export default function CartProvider({ children }) {
       }
 
       if (hasChanges) {
-        if (token) {
+        if (isLoggedIn) {
           saveCart(updatedCart, token);
           localStorage.removeItem("cartItems");
         } else {
@@ -153,7 +166,7 @@ export default function CartProvider({ children }) {
     });
 
     setPendingQuantities({});
-  }, [pendingQuantities, token]);
+  }, [pendingQuantities, token, isLoggedIn, cartItems]);
 
   const getItemSubtotal = useCallback((price, quantity) => {
     return price * Number(quantity);

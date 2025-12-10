@@ -2,12 +2,14 @@ import { useState, useEffect, useMemo, useCallback, memo } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { HiOutlineShoppingBag, HiOutlineViewList } from "react-icons/hi";
 import { useCart } from "../context/CartContext";
+import { useUser } from "../context/UserContext";
 import MobileMenu from "./MobileMenu";
 
 function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const { count } = useCart();
+  const { isLoggedIn } = useUser();
 
   const navLinks = useMemo(
     () => [
@@ -15,9 +17,12 @@ function Navbar() {
       { name: "ALL PRODUCTS", to: "/" },
       { name: "ABOUT", to: "/about" },
       { name: "CONTACT", to: "/contact" },
-      { name: "ACCOUNT  ↯", to: "/dashboard" },
+      {
+        name: isLoggedIn ? "ACCOUNT  ↯" : "LOGIN",
+        to: isLoggedIn ? "/dashboard" : "/login",
+      },
     ],
-    []
+    [isLoggedIn]
   );
 
   const openMobileMenu = useCallback(() => setMobileMenuOpen(true), []);

@@ -29,10 +29,12 @@ function CartPage() {
           <Loading />
         </div>
       )}
-      <div className="flex-1 bg-white p-4">
-        {cartItemsData.length > 0 && <CartDetail />}
-        {cartItemsData.length == 0 && <EmptyCart />}
-      </div>
+      {!loading && (
+        <div className="flex-1 bg-white p-4">
+          {cartItemsData.length > 0 && <CartDetail />}
+          {cartItemsData.length == 0 && <EmptyCart />}
+        </div>
+      )}
     </div>
   );
 }

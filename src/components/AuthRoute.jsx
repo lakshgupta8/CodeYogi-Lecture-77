@@ -3,13 +3,13 @@ import Loading from "./Loading";
 import { useUser } from "../context/UserContext";
 
 const AuthRoute = ({ children }) => {
-  const { user, loading } = useUser();
+  const { isLoggedIn, loading } = useUser();
 
   if (loading) {
     return <Loading />;
   }
 
-  if (user) {
+  if (isLoggedIn) {
     return <Navigate to="/dashboard" />;
   }
 
