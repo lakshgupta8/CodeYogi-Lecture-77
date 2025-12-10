@@ -220,8 +220,3 @@ Created as part of CodeYogi Non-Assignment Lectures - 77.
 ---
 
 **Note**: This is a learning project built as part of a coding course. The backend API is hosted on AWS Lambda and may have usage limitations.
-
-##Awaiting APIs
-
-1. Get Cart
-2. Save Cart
