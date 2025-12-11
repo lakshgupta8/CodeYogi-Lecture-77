@@ -68,6 +68,8 @@ CodeYogi-Lecture-77/
 │   │   ├── ForgotPasswordPage.jsx
 │   │   └── DashboardPage.jsx
 │   ├── context/             # React Context providers
+│   │   ├── AlertContext.js
+│   │   ├── AlertProvider.jsx
 │   │   ├── CartContext.js
 │   │   ├── CartProvider.jsx
 │   │   ├── UserContext.js
